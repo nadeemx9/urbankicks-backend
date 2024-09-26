@@ -1,13 +1,7 @@
 package com.urbankicks.config;
 
-import com.urbankicks.entities.Brand;
-import com.urbankicks.entities.Category;
-import com.urbankicks.entities.Gender;
-import com.urbankicks.entities.UserRegister;
-import com.urbankicks.repositories.BrandRepository;
-import com.urbankicks.repositories.CategoryRepository;
-import com.urbankicks.repositories.GenderRepository;
-import com.urbankicks.repositories.UserRegisterRepository;
+import com.urbankicks.entities.*;
+import com.urbankicks.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +19,7 @@ public class DataPreInitialization {
 
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+    private final CollectionRepository collectionRepository;
     private final GenderRepository genderRepository;
     private final UserRegisterRepository userRegisterRepository;
     private final PasswordEncoder passwordEncoder;
@@ -53,14 +48,27 @@ public class DataPreInitialization {
                 }
             }
 
+            // Initialize collections for Nike and Converse
+            Brand nike = brandRepository.findByBrandName("Nike");
+            if (nike != null) {
+                createCollectionIfNotExists("Jordan", nike);
+                createCollectionIfNotExists("Dunk", nike);
+                createCollectionIfNotExists("Air Max", nike);
+                createCollectionIfNotExists("Air Force 1", nike);
+            }
+
+            Brand converse = brandRepository.findByBrandName("Converse");
+            if (converse != null) {
+                createCollectionIfNotExists("Chuck", converse);
+                createCollectionIfNotExists("One Star", converse);
+            }
+
             // Initialize Men's Footwear Categories
             createCategoryIfNotExists("Casual Shoes", male);
             createCategoryIfNotExists("Formal Shoes", male);
             createCategoryIfNotExists("Loafers", male);
             createCategoryIfNotExists("Sneakers", male);
             createCategoryIfNotExists("Boots", male);
-            createCategoryIfNotExists("Oxfords", male);
-            createCategoryIfNotExists("Brogues", male);
             createCategoryIfNotExists("Sandals", male);
             createCategoryIfNotExists("Slippers", male);
 
@@ -91,19 +99,8 @@ public class DataPreInitialization {
             createCategoryIfNotExists("Training Shoes", unisex);
             createCategoryIfNotExists("Basketball Shoes", unisex);
             createCategoryIfNotExists("Football Shoes", unisex);
-            createCategoryIfNotExists("Tennis Shoes", unisex);
             createCategoryIfNotExists("Cleats", unisex);
-
-            // Initialize Specialty Footwear Categories (Unisex)
-            createCategoryIfNotExists("Orthopedic Shoes", unisex);
-            createCategoryIfNotExists("Waterproof Shoes", unisex);
-            createCategoryIfNotExists("Vegan Footwear", unisex);
-            createCategoryIfNotExists("Slip-resistant Shoes", unisex);
-
-            // Initialize Seasonal Footwear Categories (Unisex)
             createCategoryIfNotExists("Flip Flops", unisex);
-            createCategoryIfNotExists("Winter Boots", unisex);
-            createCategoryIfNotExists("Rain Boots", unisex);
 
             // Create an Admin User
             if (!userRegisterRepository.existsById(1)) {
@@ -152,5 +149,20 @@ public class DataPreInitialization {
 
     private boolean categoryExists(String categoryName, Gender gender) {
         return categoryRepository.existsByCategoryNameAndGender(categoryName, gender);
+    }
+
+    private void createCollectionIfNotExists(String collectionName, Brand brand) {
+        if (!collectionExists(collectionName, brand)) {
+            Collection collection = new Collection();
+            collection.setCollectionName(collectionName);
+            collection.setBrand(brand);
+            collection.setCreatedAt(LocalDateTime.now());
+            collection.setIsActive(true);
+            collectionRepository.save(collection);
+        }
+    }
+
+    private boolean collectionExists(String collectionName, Brand brand) {
+        return collectionRepository.existsByCollectionNameAndBrand(collectionName, brand);
     }
 }

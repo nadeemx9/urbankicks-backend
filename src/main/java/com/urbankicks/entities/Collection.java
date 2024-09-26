@@ -15,21 +15,28 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Brand {
+public class Collection {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer brandId;
+    private Long collectionId;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String brandName;
+    @Column(nullable = false)
+    private String collectionName;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brand;
+
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+    private List<Product> products = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(insertable = false)
+    private LocalDateTime updatedAt;
+
     @Column(nullable = false)
     private Boolean isActive;
-
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
-    private List<Collection> collections = new ArrayList<>();
-
 }

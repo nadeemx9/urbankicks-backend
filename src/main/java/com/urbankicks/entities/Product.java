@@ -36,6 +36,10 @@ public class Product {
     @JoinColumn(name = "gender_id", nullable = false)
     private Gender gender;
 
+    @ManyToOne
+    @JoinColumn(name = "collection_id", nullable = true)
+    private Collection collection; // Can be null if the shoe does not belong to a collection
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
