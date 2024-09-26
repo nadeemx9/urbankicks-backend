@@ -1,5 +1,6 @@
 package com.urbankicks.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Brand {
     private Boolean isActive;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Collection> collections = new ArrayList<>();
 
 }

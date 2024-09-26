@@ -1,5 +1,6 @@
 package com.urbankicks.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Collection {
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
+    @JsonBackReference
     private Brand brand;
 
     @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
