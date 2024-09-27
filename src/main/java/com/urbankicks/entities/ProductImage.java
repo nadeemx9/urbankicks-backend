@@ -1,5 +1,6 @@
 package com.urbankicks.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,9 @@ public class ProductImage {
     private Integer productImageId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_color_id", nullable = false)
+    @JsonBackReference  // Manage the relationship to avoid infinite recursion
+    private ProductColor productColor; // Link to specific color variation of the product
 
     @Column(nullable = false)
     private String imageUrl;
