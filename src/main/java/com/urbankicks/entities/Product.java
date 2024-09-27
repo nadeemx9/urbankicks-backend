@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -45,6 +46,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference  // Manage the relationship to avoid infinite recursion
     private List<ProductColor> productColors; // Variations of this product by color
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference  // Manage the relationship to avoid infinite recursion
+    private List<ProductSize> productSizes; // Variations of this product by size
 
     @Column(columnDefinition = "TEXT")
     private String description;
