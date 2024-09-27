@@ -23,12 +23,12 @@ public class CommonController {
 
     @GetMapping("/get-brands")
     ResponseEntity<APIResponse> getBrands() {
-        return new ResponseEntity<APIResponse>(commonService.getBrands(), HttpStatus.OK);
+        return new ResponseEntity<>(commonService.getBrands(), HttpStatus.OK);
     }
 
     @GetMapping("/get-categories")
     ResponseEntity<APIResponse> getCategories() {
-        return new ResponseEntity<APIResponse>(commonService.getCategories(), HttpStatus.OK);
+        return new ResponseEntity<>(commonService.getCategories(), HttpStatus.OK);
     }
 
     @GetMapping("/get-genders")

@@ -1,12 +1,19 @@
 package com.urbankicks.services;
 
+import com.urbankicks.entities.Brand;
+import com.urbankicks.entities.Collection;
 import com.urbankicks.models.APIResponse;
+import com.urbankicks.models.BrandDropDownResp;
+import com.urbankicks.models.CollectionDto;
 import com.urbankicks.repositories.BrandRepository;
 import com.urbankicks.repositories.CategoryRepository;
 import com.urbankicks.repositories.GenderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -18,9 +25,21 @@ public class CommonService {
 
     public APIResponse getBrands() {
         try {
+
+            List<Brand> brands = brandRepository.findAllBrands();
+            List<BrandDropDownResp> reponse = new ArrayList<>();
+
+            for (Brand brand : brands) {
+                List<CollectionDto> collectionDTOs = new ArrayList<>();
+                for (Collection collection : brand.getCollections()) {
+                    collectionDTOs.add(new CollectionDto(collection.getCollectionId(), collection.getCollectionName()));
+                }
+                reponse.add(new BrandDropDownResp(brand.getBrandId(), brand.getBrandName(), collectionDTOs));
+            }
+
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
-                    .data(brandRepository.findAllByIsActiveTrue())
+                    .data(reponse)
                     .build();
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -35,7 +54,7 @@ public class CommonService {
         try {
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
-                    .data(categoryRepository.findAllByIsActiveTrue())
+                    .data(categoryRepository.findAllCategories())
                     .build();
         } catch (Exception e) {
             System.err.println(e.getMessage());

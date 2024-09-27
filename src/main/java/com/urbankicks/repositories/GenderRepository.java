@@ -8,7 +8,4 @@ import java.util.List;
 public interface GenderRepository extends JpaRepository<Gender, Integer> {
     boolean existsByGenderName(Gender.GenderName genderName);
     Gender findByGenderName(Gender.GenderName genderName);
-
-    @Override
-    List<Gender> findAll();
 }
