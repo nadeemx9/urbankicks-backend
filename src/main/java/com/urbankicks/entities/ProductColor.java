@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class ProductColor {
 
     @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference  // Manage the relationship to avoid infinite recursion
-    private List<ProductImage> images;  // Images specific to this color variation
+    private List<ProductImage> images = new ArrayList<>();  // Images specific to this color variation
 
     @Column(nullable = false)
     private Boolean isActive;
