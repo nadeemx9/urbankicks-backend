@@ -110,4 +110,19 @@ public class CommonService {
                     .build();
         }
     }
+
+    public APIResponse getCategoriesSection() {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(categoryRepository.getCategoriesSection())
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
 }

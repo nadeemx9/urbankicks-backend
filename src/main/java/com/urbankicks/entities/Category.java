@@ -31,6 +31,8 @@ public class Category {
     @Column(insertable = false)
     private LocalDateTime updatedAt;
 
+    private String imgPath;
+
     @Column(nullable = false)
     private Boolean isActive;
 }

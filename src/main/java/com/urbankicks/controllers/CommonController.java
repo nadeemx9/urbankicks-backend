@@ -35,4 +35,9 @@ public class CommonController {
     ResponseEntity<APIResponse> getGenders() {
         return new ResponseEntity<>(commonService.getGenders(), HttpStatus.OK);
     }
+
+    @GetMapping("/get-categories-section")
+    public ResponseEntity<APIResponse> getCategoriesSection() {
+        return new ResponseEntity<>(commonService.getCategoriesSection(), HttpStatus.OK);
+    }
 }

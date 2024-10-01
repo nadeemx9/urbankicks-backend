@@ -2,6 +2,7 @@ package com.urbankicks.repositories;
 
 import com.urbankicks.entities.Category;
 import com.urbankicks.entities.Gender;
+import com.urbankicks.models.CategoryDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -32,6 +33,15 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
                     c.categoryName
             """)
     List<Map<String, Object>> getCategoriesDropdown();
+
+    @Query("""
+            SELECT new com.urbankicks.models.CategoryDto(c.categoryId, c.categoryName)
+            FROM Category c
+            WHERE c.gender.genderId = 3 AND c.isActive = true
+            ORDER BY c.categoryName
+            LIMIT 12
+            """)
+    List<CategoryDto> getCategoriesSection();
 
     boolean existsByCategoryNameAndGender(String categoryName, Gender gender);
 }
