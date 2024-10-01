@@ -21,18 +21,18 @@ public class CommonController {
         return ResponseEntity.ok().body("Test Endpoint!");
     }
 
-    @GetMapping("/get-brands")
-    ResponseEntity<APIResponse> getBrands() {
-        return new ResponseEntity<>(commonService.getBrands(), HttpStatus.OK);
+    @GetMapping("/get-brands-dropdown")
+    ResponseEntity<APIResponse> getBrandsDropdown() {
+        return new ResponseEntity<>(commonService.getBrandsDropdown(), HttpStatus.OK);
     }
 
-    @GetMapping("/get-categories")
-    ResponseEntity<APIResponse> getCategories() {
-        return new ResponseEntity<>(commonService.getCategories(), HttpStatus.OK);
+    @GetMapping("/get-categories-dropdown")
+    ResponseEntity<APIResponse> getCategoriesDropdown() {
+        return new ResponseEntity<>(commonService.getCategoriesDropdown(), HttpStatus.OK);
     }
 
     @GetMapping("/get-genders")
     ResponseEntity<APIResponse> getGenders() {
-        return new ResponseEntity<APIResponse>(commonService.getGenders(), HttpStatus.OK);
+        return new ResponseEntity<>(commonService.getGenders(), HttpStatus.OK);
     }
 }

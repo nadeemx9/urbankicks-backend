@@ -62,9 +62,9 @@ public class DataPreInitialization {
 
     private void initializeCategories() {
         Map<Gender.GenderName, List<String>> categoriesByGender = Map.of(
-                Gender.GenderName.MALE, Arrays.asList("Casual Shoes", "Formal Shoes", "Loafers", "Sneakers", "Boots", "Sandals", "Slippers"),
-                Gender.GenderName.FEMALE, Arrays.asList("Heels", "Flats", "Wedges", "Ballet Flats", "Pumps", "Boots", "Mules", "Sneakers", "Sandals", "Slippers"),
-                Gender.GenderName.UNISEX, Arrays.asList("Boys' Shoes", "Girls' Shoes", "School Shoes", "Sneakers", "Sandals", "Boots", "Slippers",
+                Gender.GenderName.MALE, Arrays.asList("Casual Shoes", "Formal Shoes", "Loafers", "Sneakers", "Boots", "Sandals", "Slippers", "Boys' Shoes"),
+                Gender.GenderName.FEMALE, Arrays.asList("Heels", "Flats", "Wedges", "Ballet Flats", "Pumps", "Boots", "Mules", "Sneakers", "Sandals", "Slippers", "Girls' Shoes"),
+                Gender.GenderName.UNISEX, Arrays.asList("School Shoes", "Sneakers", "Sandals", "Boots", "Slippers",
                         "Running Shoes", "Hiking Boots", "Training Shoes", "Basketball Shoes", "Football Shoes", "Cleats", "Flip Flops")
         );
 

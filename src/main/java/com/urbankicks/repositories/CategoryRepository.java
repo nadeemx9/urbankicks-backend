@@ -10,11 +10,28 @@ import java.util.Map;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("""
-            select new map(c.categoryId as categoryId, c.categoryName as categoryName)
-            from Category c
-            where c.isActive = true
+                SELECT new map(
+                    g.genderId AS genderId,
+                    CASE
+                        WHEN g.genderName = 'MALE' THEN 'Men'
+                        WHEN g.genderName = 'FEMALE' THEN 'Women'
+                        WHEN g.genderName = 'UNISEX' THEN 'Unisex'
+                    END AS genderName,
+                    c.categoryId AS categoryId,
+                    c.categoryName AS categoryName
+                )
+                FROM Category c
+                INNER JOIN c.gender g
+                WHERE c.isActive = true
+                ORDER BY
+                    CASE
+                        WHEN g.genderName = 'MALE' THEN 1
+                        WHEN g.genderName = 'FEMALE' THEN 2
+                        WHEN g.genderName = 'UNISEX' THEN 3
+                    END,
+                    c.categoryName
             """)
-    List<Map<String, Object>> findAllCategories();
+    List<Map<String, Object>> getCategoriesDropdown();
 
     boolean existsByCategoryNameAndGender(String categoryName, Gender gender);
 }

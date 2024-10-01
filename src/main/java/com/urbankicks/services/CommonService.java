@@ -2,31 +2,34 @@ package com.urbankicks.services;
 
 import com.urbankicks.entities.Brand;
 import com.urbankicks.entities.Collection;
-import com.urbankicks.models.APIResponse;
-import com.urbankicks.models.BrandDropDownResp;
-import com.urbankicks.models.CollectionDto;
+import com.urbankicks.models.*;
 import com.urbankicks.repositories.BrandRepository;
 import com.urbankicks.repositories.CategoryRepository;
 import com.urbankicks.repositories.GenderRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
 @RequiredArgsConstructor
 public class CommonService {
+    private static final Logger log = LoggerFactory.getLogger(CommonService.class);
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final GenderRepository genderRepository;
 
-    public APIResponse getBrands() {
+    public APIResponse getBrandsDropdown() {
         try {
 
-            List<Brand> brands = brandRepository.findAllBrands();
+            List<Brand> brands = brandRepository.getBrandsDropdown();
             List<BrandDropDownResp> reponse = new ArrayList<>();
 
             for (Brand brand : brands) {
@@ -42,7 +45,7 @@ public class CommonService {
                     .data(reponse)
                     .build();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
             return APIResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .respMsg(e.getMessage())
@@ -50,20 +53,48 @@ public class CommonService {
         }
     }
 
-    public APIResponse getCategories() {
+    public APIResponse getCategoriesDropdown() {
         try {
+            // Fetch the list of categories with their gender data
+            List<Map<String, Object>> categories = categoryRepository.getCategoriesDropdown();
+            List<CategoryDropdownResp> resp = new ArrayList<>();
+
+            // A map to track gender and associated categories
+            Map<Integer, CategoryDropdownResp> genderMap = new HashMap<>();
+
+            // Iterate over the fetched categories
+            categories.forEach(c -> {
+                Integer genderId = (Integer) c.get("genderId");
+                String genderName = (String) c.get("genderName");
+                Integer categoryId = (Integer) c.get("categoryId");
+                String categoryName = (String) c.get("categoryName");
+
+                // If this gender is not yet added, create a new CategoryDropdownResp
+                CategoryDropdownResp categoryDropdownResp = genderMap.get(genderId);
+                if (categoryDropdownResp == null) {
+                    categoryDropdownResp = new CategoryDropdownResp(genderId, genderName, new ArrayList<>());
+                    genderMap.put(genderId, categoryDropdownResp);
+                    resp.add(categoryDropdownResp);
+                }
+
+                // If the category exists (i.e., not null), add it to the categories list
+                if (categoryId != null && categoryName != null) {
+                    categoryDropdownResp.getCategories().add(new CategoryDto(categoryId, categoryName));
+                }
+            });
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
-                    .data(categoryRepository.findAllCategories())
+                    .data(resp)
                     .build();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
             return APIResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .respMsg(e.getMessage())
                     .build();
         }
     }
+
 
     public APIResponse getGenders() {
         try {
@@ -72,7 +103,7 @@ public class CommonService {
                     .data(genderRepository.findAll())
                     .build();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
             return APIResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .respMsg(e.getMessage())

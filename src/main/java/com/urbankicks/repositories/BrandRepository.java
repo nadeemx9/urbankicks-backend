@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface BrandRepository extends JpaRepository<Brand, Integer> {
     boolean existsByBrandName(String brandName);
@@ -16,7 +15,7 @@ public interface BrandRepository extends JpaRepository<Brand, Integer> {
                 LEFT JOIN b.collections c
                 WHERE b.isActive = true
             """)
-    List<Brand> findAllBrands();
+    List<Brand> getBrandsDropdown();
 
     Brand findByBrandName(String brandName);
 }
