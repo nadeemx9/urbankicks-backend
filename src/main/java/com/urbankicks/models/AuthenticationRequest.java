@@ -1,7 +1,7 @@
 package com.urbankicks.models;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenticationRequest {
-    @NotEmpty(message = "{msg.pls.enter.username}")
+    @NotEmpty(message = "{msg.required.field}")
+    @NotBlank(message = "{msg.not.blank.field}")
     private String username;
 
-    @NotEmpty(message = "{msg.pls.enter.password}")
+    @NotEmpty(message = "{msg.required.field}")
+    @NotBlank(message = "{msg.not.blank.field}")
     private String password;
 }
