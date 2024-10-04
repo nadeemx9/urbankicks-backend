@@ -47,6 +47,8 @@ public class UserRegister implements UserDetails {
     @Column(nullable = false)
     private Boolean isLoggedOut;
 
+    private LocalDateTime lastLoggedIn;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
