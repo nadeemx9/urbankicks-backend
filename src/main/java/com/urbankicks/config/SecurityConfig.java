@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.StreamWriteConstraints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urbankicks.config.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -83,5 +86,26 @@ public class SecurityConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.getFactory().setStreamWriteConstraints(StreamWriteConstraints.builder().maxNestingDepth(1000).build());
         return objectMapper;
+    }
+
+//    @Bean
+//    public MessageSource messageSource() {
+//        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+//        messageSource.setBasename("messages");  // Matches 'messages.yml' or 'messages.properties'
+//        messageSource.setDefaultEncoding("UTF-8");
+//        return messageSource;
+//    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+
+        messageSource.setBasenames(
+                "classpath:messages",
+                "classpath:link-ids",
+                "classpath:validations-regex",
+                "classpath:email-sms-template");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 }
