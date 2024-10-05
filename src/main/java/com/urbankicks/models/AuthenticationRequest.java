@@ -14,7 +14,7 @@ import lombok.Setter;
 public class AuthenticationRequest {
     @NotEmpty(message = "{msg.required.field}")
     @NotBlank(message = "{msg.not.blank.field}")
-    private String username;
+    private String email;
 
     @NotEmpty(message = "{msg.required.field}")
     @NotBlank(message = "{msg.not.blank.field}")

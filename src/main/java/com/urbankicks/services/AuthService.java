@@ -2,7 +2,6 @@ package com.urbankicks.services;
 
 import com.urbankicks.config.jwt.JwtService;
 import com.urbankicks.entities.UserRegister;
-import com.urbankicks.models.APIResponse;
 import com.urbankicks.models.AuthenticationRequest;
 import com.urbankicks.models.AuthenticationResponse;
 import com.urbankicks.repositories.UserRegisterRepository;
@@ -25,7 +24,7 @@ public class AuthService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getEmail(),
                         request.getPassword()
                 )
         );
@@ -46,7 +45,7 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(UserRegister user){
+    public void logout(UserRegister user) {
         user.setIsLoggedOut(true);
         userRegisterRepository.save(user);
     }
