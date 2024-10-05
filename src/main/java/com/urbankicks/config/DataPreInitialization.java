@@ -101,14 +101,15 @@ public class DataPreInitialization {
     private void createAdminUser() {
         if (!userRegisterRepository.existsById(1)) {
             UserRegister adminUser = new UserRegister();
-            adminUser.setUsername("nadeem");
-            adminUser.setEmail("nadeempalkhiwala@urbankicks.com");
+            adminUser.setEmail("nadeem");
             adminUser.setPassword(passwordEncoder.encode("nadeem"));
             adminUser.setFirstname("Nadeem");
             adminUser.setLastname("Palkhiwala");
             adminUser.setRole(UserRegister.Role.ADMIN);
             adminUser.setCreatedAt(LocalDateTime.now());
-            adminUser.setIsLoggedOut(false);
+            adminUser.setIsLoggedOut(true);
+//            adminUser.setDistrict(new District());
+//            adminUser.setState(new State());
             userRegisterRepository.save(adminUser);
         }
     }

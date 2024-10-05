@@ -14,13 +14,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRegisterRepository userRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRegisterRepository userRepository)
-    {
+    public UserDetailsServiceImpl(UserRegisterRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserRegister user = userRepository.findByUsernameIgnoreCase(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserRegister user = userRepository.findByEmailIgnoreCase(email);
         if (user != null)
             return user;
         else

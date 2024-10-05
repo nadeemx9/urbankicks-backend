@@ -1,7 +1,10 @@
 package com.urbankicks.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,32 +22,40 @@ public class UserRegister implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String username;
-
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String firstname;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String lastname;
+
+    @Column(columnDefinition = "TEXT")
+    private String address;
+
+    @Column(nullable = true)
+    private String mobile;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Column(nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "state_id")
+    private State state;
+
+    @ManyToOne
+    @JoinColumn(name = "district_id")
+    private District district;
+
     private LocalDateTime createdAt;
 
-    @Column(insertable = false)
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
     private Boolean isLoggedOut;
 
     private LocalDateTime lastLoggedIn;
@@ -52,6 +63,11 @@ public class UserRegister implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
@@ -77,6 +93,7 @@ public class UserRegister implements UserDetails {
     public enum Role {
         CUSTOMER, ADMIN
     }
+
     public String getFullName() {
         return firstname + " " + lastname;
     }

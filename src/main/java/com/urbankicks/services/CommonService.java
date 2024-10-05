@@ -3,9 +3,7 @@ package com.urbankicks.services;
 import com.urbankicks.entities.Brand;
 import com.urbankicks.entities.Collection;
 import com.urbankicks.models.*;
-import com.urbankicks.repositories.BrandRepository;
-import com.urbankicks.repositories.CategoryRepository;
-import com.urbankicks.repositories.GenderRepository;
+import com.urbankicks.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,9 @@ public class CommonService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final GenderRepository genderRepository;
+    private final CountryRepository countryRepository;
+    private final StateRepository stateRepository;
+    private final DistrictRepository districtRepository;
 
     public APIResponse getBrandsDropdown() {
         try {
@@ -116,6 +117,51 @@ public class CommonService {
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
                     .data(categoryRepository.getCategoriesSection())
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getCountries() {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(countryRepository.findAll())
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getStates() {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(stateRepository.findAll())
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getDistricts(int stateId) {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(districtRepository.findByState_StateId(stateId))
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());

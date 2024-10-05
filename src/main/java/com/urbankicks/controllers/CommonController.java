@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,5 +40,20 @@ public class CommonController {
     @GetMapping("/get-categories-section")
     public ResponseEntity<APIResponse> getCategoriesSection() {
         return new ResponseEntity<>(commonService.getCategoriesSection(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-countries")
+    public ResponseEntity<APIResponse> getCountries() {
+        return new ResponseEntity<>(commonService.getCountries(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-states")
+    public ResponseEntity<APIResponse> getStates() {
+        return new ResponseEntity<>(commonService.getStates(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-districts/{stateId}")
+    public ResponseEntity<APIResponse> getDistricts(@PathVariable int stateId) {
+        return new ResponseEntity<>(commonService.getDistricts(stateId), HttpStatus.OK);
     }
 }
