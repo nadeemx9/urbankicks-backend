@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.urbankicks.models.APIResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.DecodingException;
+import io.jsonwebtoken.io.DeserializationException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +97,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JsonParseException.class)
     public ResponseEntity<APIResponse> handleJsonParseExceptionException(JsonParseException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Token", ex.getMessage());
+    }
+
+    @ExceptionHandler(DeserializationException.class)
+    public ResponseEntity<APIResponse> handleDeserializationExceptionException(DeserializationException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Token", ex.getMessage());
     }
 

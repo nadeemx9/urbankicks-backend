@@ -20,7 +20,6 @@ public class UserController {
 
     @GetMapping("/logout")
     public void logout(@AuthenticationPrincipal UserRegister user) {
-        System.out.println(user.getUserId());
         authService.logout(user);
     }
 
