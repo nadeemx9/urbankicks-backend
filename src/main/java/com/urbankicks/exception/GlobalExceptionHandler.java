@@ -1,5 +1,6 @@
 package com.urbankicks.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.urbankicks.models.APIResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.DecodingException;
@@ -91,6 +92,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<APIResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "MAX_UPLOAD_SIZE_EXCEEDED", "Maximum upload size is 30MB.");
+    }
+
+    @ExceptionHandler(JsonParseException.class)
+    public ResponseEntity<APIResponse> handleJsonParseExceptionException(JsonParseException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Token", ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<APIResponse> handleException(Exception ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Server Error", ex.getMessage());
     }
 
     // Utility method to build a common error response
