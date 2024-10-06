@@ -12,7 +12,6 @@ import com.urbankicks.repositories.UserRegisterRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.ssl.SslAutoConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +31,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final StateRepository stateRepository;
     private final DistrictRepository districtRepository;
-    private final SslAutoConfiguration sslAutoConfiguration;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var auth = authenticationManager.authenticate(
