@@ -1,6 +1,8 @@
 package com.urbankicks.controllers;
 
 import com.urbankicks.entities.UserRegister;
+import com.urbankicks.models.AuthenticatedUser;
+import com.urbankicks.repositories.UserRegisterRepository;
 import com.urbankicks.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final AuthService authService;
+    private final UserRegisterRepository userRegisterRepository;
 
     @GetMapping("/logout")
-    public void logout(@AuthenticationPrincipal UserRegister user) {
-        authService.logout(user);
+    public void logout(@AuthenticationPrincipal AuthenticatedUser user) {
+        authService.logout(userRegisterRepository.findByUserId(user.getUserId()));
     }
 }

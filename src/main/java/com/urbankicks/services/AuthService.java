@@ -2,10 +2,7 @@ package com.urbankicks.services;
 
 import com.urbankicks.config.jwt.JwtService;
 import com.urbankicks.entities.UserRegister;
-import com.urbankicks.models.APIResponse;
-import com.urbankicks.models.AuthenticationRequest;
-import com.urbankicks.models.AuthenticationResponse;
-import com.urbankicks.models.RegisterPayload;
+import com.urbankicks.models.*;
 import com.urbankicks.repositories.DistrictRepository;
 import com.urbankicks.repositories.StateRepository;
 import com.urbankicks.repositories.UserRegisterRepository;
@@ -14,11 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,7 @@ public class AuthService {
     private final DistrictRepository districtRepository;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        // Authenticate the user using the provided credentials
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -40,21 +40,37 @@ public class AuthService {
                 )
         );
 
-        var claims = new HashMap<String, Object>();
-        var user = ((UserRegister) auth.getPrincipal());
-        user.setIsLoggedOut(false);
-        user.setLastLoggedIn(LocalDateTime.now());
+        // Extract authenticated user details
+        AuthenticatedUser authenticatedUser = (AuthenticatedUser) auth.getPrincipal();
+        Integer userId = authenticatedUser.getUserId();
 
-        claims.put("fullName", user.getFullName());
+        // Retrieve user from repository
+        Optional<UserRegister> optionalUser = userRegisterRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            UserRegister user = optionalUser.get();
 
-        userRegisterRepository.save(user);
+            // Update user's last login information
+            user.setIsLoggedOut(false);
+            user.setLastLoggedIn(LocalDateTime.now());
+            userRegisterRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(claims, (UserRegister) auth.getPrincipal());
+            // Prepare JWT claims
+            var claims = new HashMap<String, Object>();
+            claims.put("fullName", user.getFullName());
 
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+            // Generate JWT token
+            var jwtToken = jwtService.generateToken(claims, authenticatedUser);
+
+            // Build and return the authentication response
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        } else {
+            // Handle case where user is not found (optional)
+            throw new UsernameNotFoundException("User not found");
+        }
     }
+
 
     public APIResponse register(RegisterPayload payload) {
         try {
