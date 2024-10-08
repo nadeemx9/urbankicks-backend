@@ -2,12 +2,8 @@ package com.urbankicks.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter
@@ -15,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class UserRegister implements UserDetails {
+public class UserRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
@@ -35,7 +31,6 @@ public class UserRegister implements UserDetails {
     @Column(columnDefinition = "TEXT")
     private String address;
 
-    @Column(nullable = true)
     private String mobile;
 
     @Enumerated(EnumType.STRING)
@@ -57,36 +52,6 @@ public class UserRegister implements UserDetails {
     private Boolean isLoggedOut;
 
     private LocalDateTime lastLoggedIn;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
-    }
 
     public enum Role {
         CUSTOMER, ADMIN
