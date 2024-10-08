@@ -56,4 +56,14 @@ public class CommonController {
     public ResponseEntity<APIResponse> getDistricts(@PathVariable int stateId) {
         return new ResponseEntity<>(commonService.getDistricts(stateId), HttpStatus.OK);
     }
+
+    @GetMapping("/get-categories-by-gender/{genderId}")
+    public ResponseEntity<APIResponse> getCategoriesByGender(@PathVariable int genderId) {
+        return new ResponseEntity<>(commonService.getCategoriesByGender(genderId), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-collections-by-brand/{brandId}")
+    public ResponseEntity<APIResponse> getCollectionsByBrand(@PathVariable int brandId) {
+        return new ResponseEntity<>(commonService.getCollectionsByBrand(brandId), HttpStatus.OK);
+    }
 }

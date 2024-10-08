@@ -21,6 +21,7 @@ import java.util.Map;
 public class CommonService {
     private static final Logger log = LoggerFactory.getLogger(CommonService.class);
     private final BrandRepository brandRepository;
+    private final CollectionRepository collectionRepository;
     private final CategoryRepository categoryRepository;
     private final GenderRepository genderRepository;
     private final CountryRepository countryRepository;
@@ -86,6 +87,36 @@ public class CommonService {
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
                     .data(resp)
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getCategoriesByGender(int genderId) {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(categoryRepository.getCategoriesByGender(genderId))
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getCollectionsByBrand(int brandId) {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(collectionRepository.getCollectionsByBrand(brandId))
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());

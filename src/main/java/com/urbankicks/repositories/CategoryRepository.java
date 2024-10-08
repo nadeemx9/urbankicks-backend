@@ -43,5 +43,15 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             """)
     List<CategoryDto> getCategoriesSection();
 
+    @Query("""
+            SELECT new map(
+                c.categoryId AS categoryId,
+                c.categoryName AS categoryName
+                )
+            FROM Category c
+            WHERE c.gender.genderId = :genderId AND c.isActive = true
+            """)
+    List<Map<String, Object>> getCategoriesByGender(int genderId);
+
     boolean existsByCategoryNameAndGender(String categoryName, Gender gender);
 }
