@@ -38,13 +38,13 @@ public class AuthenticatedUser implements UserDetails {
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();
         this.address = user.getAddress();
-        this.mobile = user.getMobile();
+        this.mobile = user.getMobile() != null ? user.getMobile() : null;
         this.role = user.getRole().name();
         this.stateId = user.getState().getStateId();
         this.stateName = user.getState().getStateName();
         this.districtId = user.getDistrict().getDistrictId();
         this.districtName = user.getDistrict().getDistrictName();
-        this.lastLoggedIn = user.getLastLoggedIn().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.lastLoggedIn = user.getLastLoggedIn() != null ? user.getLastLoggedIn().format(DateTimeFormatter.ofPattern("dd/MM/yyyy:hh:mm:ss")) : null;
     }
 
     @Override
