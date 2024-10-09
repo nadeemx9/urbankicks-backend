@@ -27,6 +27,8 @@ public class CommonService {
     private final CountryRepository countryRepository;
     private final StateRepository stateRepository;
     private final DistrictRepository districtRepository;
+    private final ColorRepository colorRepository;
+    private final SizeRepository sizeRepository;
 
     public APIResponse getBrandsDropdown() {
         try {
@@ -193,6 +195,35 @@ public class CommonService {
             return APIResponse.builder()
                     .status(HttpStatus.OK.value())
                     .data(districtRepository.findByState_StateId(stateId))
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+    public APIResponse getColors() {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(colorRepository.findAll())
+                    .build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return APIResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .respMsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public APIResponse getSizes() {
+        try {
+            return APIResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .data(sizeRepository.findAll())
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());

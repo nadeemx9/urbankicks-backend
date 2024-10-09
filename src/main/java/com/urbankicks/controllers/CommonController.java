@@ -66,4 +66,14 @@ public class CommonController {
     public ResponseEntity<APIResponse> getCollectionsByBrand(@PathVariable int brandId) {
         return new ResponseEntity<>(commonService.getCollectionsByBrand(brandId), HttpStatus.OK);
     }
+
+    @GetMapping("/get-colors")
+    public ResponseEntity<APIResponse> getColors() {
+        return new ResponseEntity<>(commonService.getColors(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-sizes")
+    public ResponseEntity<APIResponse> getSizes() {
+        return new ResponseEntity<>(commonService.getSizes(), HttpStatus.OK);
+    }
 }
