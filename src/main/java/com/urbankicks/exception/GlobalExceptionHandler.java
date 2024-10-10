@@ -6,6 +6,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.io.DeserializationException;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,15 +20,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+    private final MessageSource messageSource;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -98,7 +104,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<APIResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "MAX_UPLOAD_SIZE_EXCEEDED", "Maximum upload size is 30MB.");
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "MAX_UPLOAD_SIZE_EXCEEDED", "Maximum upload size is 50MB.");
     }
 
     @ExceptionHandler(JsonParseException.class)
@@ -111,9 +117,21 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Token", ex.getMessage());
     }
 
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<APIResponse> handleHandlerMethodValidationException(HandlerMethodValidationException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Custom Validation Error");
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<APIResponse> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+        String fieldName = ex.getRequestPartName();
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", ex.getMessage(), Map.of(fieldName, "101"));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIResponse> handleException(Exception ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Server Error", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "SERVER_ERROR", ex.getMessage());
     }
 
     // Utility method to build a common error response

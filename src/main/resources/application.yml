@@ -12,8 +12,12 @@ spring:
     password: ChangeMe@123
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 application:
   security:
