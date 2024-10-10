@@ -56,6 +56,13 @@ public class ProductController {
 
     public APIResponse validateFile(MultipartFile file, String fileFieldName) {
         Map<String, String> errors = new HashMap<>();
+
+        if (file.isEmpty()) {
+            String errorMsg = messageSource.getMessage("msg.blank.file", null, Locale.getDefault());
+            errors.put(fileFieldName, errorMsg);
+            return buildErrorResponse(errors);
+        }
+
         if (file.getSize() > MAX_FILE_SIZE) {
             String errorMsg = messageSource.getMessage("msg.max.file.size.exceeds", null, Locale.getDefault());
             errors.put(fileFieldName, errorMsg);
