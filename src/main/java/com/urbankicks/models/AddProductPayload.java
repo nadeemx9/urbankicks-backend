@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -25,5 +24,4 @@ public class AddProductPayload {
     private Long colorId;
     private BigDecimal basePrice;
     private Integer quantity;
-    private String primaryImg;
 }
