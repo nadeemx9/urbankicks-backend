@@ -51,7 +51,7 @@ public class ProductController {
                         .build());
     }
 
-    private static final long MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"};
 
     public APIResponse validateFile(MultipartFile file, String fileFieldName) {
