@@ -1,5 +1,6 @@
 package com.urbankicks.services;
 
+import com.cloudinary.Cloudinary;
 import com.urbankicks.models.APIResponse;
 import com.urbankicks.models.AddProductPayload;
 import com.urbankicks.repositories.ProductRepository;
@@ -10,6 +11,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
@@ -21,6 +24,7 @@ public class ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final MessageSource messageSource;
+    private final Cloudinary cloudinary;
 
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"};
@@ -70,6 +74,7 @@ public class ProductService {
                 .status(200)
                 .respCode("SUCCESS")
                 .respMsg("Product added successfully")
+//                .data(uploadImageToCloudinary(primaryImage, payload.getProductName() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy_hh:mm:ss"))))
                 .build();
     }
 
@@ -140,5 +145,23 @@ public class ProductService {
                 .respCode("VALIDATION_ERROR")
                 .errors(errors)
                 .build();
+    }
+
+    public String uploadImageToCloudinary(MultipartFile file, String productName) {
+        try {
+            String folderName = "urbankicks/products/" + productName + LocalDateTime.now();
+            HashMap<Object, Object> options = new HashMap<>();
+            options.put("folder", folderName);
+            options.put("use_filename", true);
+            options.put("unique_filename", true);
+            options.put("resource_type", "image");
+
+            Map uploadedFile = cloudinary.uploader().upload(file.getBytes(), options);
+            String publicId = (String) uploadedFile.get("public_id");
+            return cloudinary.url().secure(true).generate(publicId);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 }
